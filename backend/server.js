@@ -21,9 +21,10 @@ app.use('/api/doctors', require('./routes/doctorRoutes'));
 app.use('/api/bookings', require('./routes/bookingRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
 
-// مجلد الصور
-const uploadsDir = process.env.VERCEL ? '/tmp' : path.join(__dirname, 'uploads');
-app.use('/uploads', express.static(uploadsDir));
+// مجلد الصور الثابتة (من Git)
+const staticUploadsDir = path.join(__dirname, 'uploads');
+app.use('/uploads', express.static(staticUploadsDir));
+
 
 // ===== Frontend Static Files =====
 const frontendPath = path.join(__dirname, '../frontend');

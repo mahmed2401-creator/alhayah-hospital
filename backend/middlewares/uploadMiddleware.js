@@ -2,7 +2,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// تحديد مسار مجلد رفع الصور (استخدام /tmp في حالة Vercel)
+// تحديد مسار رفع الملفات الجديدة فقط
 const uploadDir = process.env.VERCEL ? '/tmp' : path.join(__dirname, '../uploads');
 if (!process.env.VERCEL && !fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir);
