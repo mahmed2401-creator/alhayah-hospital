@@ -21,6 +21,27 @@ app.use('/api/doctors', require('./routes/doctorRoutes'));
 app.use('/api/bookings', require('./routes/bookingRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
 
+// إحصائيات لوحة التحكم (طلب واحد بدل 4)
+app.get('/api/stats', async (req, res) => {
+    try {
+        const User = require('./models/User');
+        const Booking = require('./models/Booking');
+        const Doctor = require('./models/Doctor');
+        const Specialty = require('./models/Specialty');
+
+        const [patients, bookings, doctors, specialties] = await Promise.all([
+            User.countDocuments({ role: 'user' }),
+            Booking.countDocuments(),
+            Doctor.countDocuments(),
+            Specialty.countDocuments()
+        ]);
+
+        res.json({ success: true, data: { patients, bookings, doctors, specialties } });
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'خطأ في الخادم' });
+    }
+});
+
 // مجلد الصور الثابتة (من Git)
 const staticUploadsDir = path.join(__dirname, 'uploads');
 app.use('/uploads', express.static(staticUploadsDir));

@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // جلب البيانات الأساسية
+    loadDashboardStats();
     loadBookings();
     updateBookingsBadge();
 
@@ -233,15 +234,13 @@ window.showSection = function(sectionId) {
 
 async function loadDashboardStats() {
     try {
-        const users = await fetchAPI('/users');
-        const bookings = await fetchAPI('/bookings');
-        const doctors = await fetchAPI('/doctors');
-        const specialties = await fetchAPI('/specialties');
+        const result = await fetchAPI('/stats');
+        const stats = result.data;
 
-        document.getElementById('statPatients').textContent = users.data.length;
-        document.getElementById('statBookings').textContent = bookings.data.length;
-        document.getElementById('statDoctors').textContent = doctors.data.length;
-        document.getElementById('statSpecialties').textContent = specialties.data.length;
+        document.getElementById('statPatients').textContent = stats.patients;
+        document.getElementById('statBookings').textContent = stats.bookings;
+        document.getElementById('statDoctors').textContent = stats.doctors;
+        document.getElementById('statSpecialties').textContent = stats.specialties;
     } catch (err) {
         console.log("Stats error:", err);
     }
