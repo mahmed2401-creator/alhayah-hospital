@@ -1,22 +1,30 @@
 const mongoose = require('mongoose');
 
+let cachedPromise = null;
+
 const connectDB = async () => {
     // 0 = disconnected, 1 = connected, 2 = connecting, 3 = disconnecting
     if (mongoose.connection.readyState === 1) {
         return mongoose.connection;
     }
 
+    if (cachedPromise) {
+        await cachedPromise;
+        return mongoose.connection;
+    }
+
     try {
-        const conn = await mongoose.connect(process.env.MONGODB_URI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-            serverSelectionTimeoutMS: 5000 // تقليل وقت الانتظار لتجنب تعليق الطلبات
+        cachedPromise = mongoose.connect(process.env.MONGODB_URI, {
+            serverSelectionTimeoutMS: 5000
         });
-        console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
-        return conn;
+        
+        await cachedPromise;
+        console.log(`✅ MongoDB Connected`);
+        return mongoose.connection;
     } catch (error) {
+        cachedPromise = null; 
         console.error(`❌ MongoDB Error: ${error.message}`);
-        // لا نستخدم process.exit في Vercel
+        
         if (!process.env.VERCEL) {
             process.exit(1);
         }
