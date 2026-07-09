@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم الإدارة - مستشفى الحياة</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+
+    <div class="loader-wrapper">
+        <div class="loader"></div>
+    </div>
+
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <i class="fa-solid fa-hospital-user" style="font-size: 2.5rem;"></i>
+                <h2>إدارة المستشفى</h2>
+                <p style="font-size: 0.8rem; opacity: 0.8;">لوحة تحكم المشرف</p>
+            </div>
+            
+            <ul class="sidebar-nav">
+                <li><a href="#" onclick="showSection('dashboardSection')" id="nav-dashboard" class="active"><i class="fa-solid fa-chart-pie"></i> الرئيسية</a></li>
+                <li><a href="#" onclick="showSection('patientsSection')" id="nav-patients"><i class="fa-solid fa-users"></i> المرضى</a></li>
+                <li><a href="#" onclick="showSection('bookingsSection')" id="nav-bookings"><i class="fa-solid fa-calendar-check"></i> الحجوزات <span id="bookingsBadge" class="nav-badge" style="display:none;"></span></a></li>
+                <li><a href="#" onclick="showSection('doctorsSection')" id="nav-doctors"><i class="fa-solid fa-user-doctor"></i> الأطباء</a></li>
+                <li><a href="#" onclick="showSection('specialtiesSection')" id="nav-specialties"><i class="fa-solid fa-notes-medical"></i> التخصصات</a></li>
+                <li style="margin-top: 25px;"><a href="home.html" style="background: rgba(255,255,255,0.1); font-weight: bold;"><i class="fa-solid fa-globe"></i> عرض الموقع</a></li>
+                <li style="margin-top: 15px;"><a href="#" id="adminLogout" style="color: #ffcccc;"><i class="fa-solid fa-right-from-bracket"></i> تسجيل الخروج</a></li>
+            </ul>
+        </aside>
+
+        <!-- Content -->
+        <main class="admin-content">
+            
+            <!-- قسم الرئيسية -->
+            <section id="dashboardSection" class="admin-section" style="display: block;">
+                <div class="dashboard-header" style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h2 style="margin:0;">الرئيسية (الإحصائيات)</h2>
+                        <div style="display:flex; gap: 15px; margin-top: 10px;">
+                            <span id="adminWelcome">مرحباً، أدمن</span>
+                        </div>
+                    </div>
+
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 30px;">
+                    <div class="glass-panel" style="padding: 20px; text-align: center; border-radius: 10px;">
+                        <i class="fa-solid fa-users" style="font-size: 2rem; color: var(--primary-color);"></i>
+                        <h3 style="margin: 10px 0;">إجمالي المرضى</h3>
+                        <h2 id="statPatients" style="color: var(--secondary-color);">0</h2>
+                    </div>
+                    <div class="glass-panel" style="padding: 20px; text-align: center; border-radius: 10px;">
+                        <i class="fa-solid fa-calendar-check" style="font-size: 2rem; color: var(--primary-color);"></i>
+                        <h3 style="margin: 10px 0;">إجمالي الحجوزات</h3>
+                        <h2 id="statBookings" style="color: var(--secondary-color);">0</h2>
+                    </div>
+                    <div class="glass-panel" style="padding: 20px; text-align: center; border-radius: 10px;">
+                        <i class="fa-solid fa-user-doctor" style="font-size: 2rem; color: var(--primary-color);"></i>
+                        <h3 style="margin: 10px 0;">الأطباء</h3>
+                        <h2 id="statDoctors" style="color: var(--secondary-color);">0</h2>
+                    </div>
+                    <div class="glass-panel" style="padding: 20px; text-align: center; border-radius: 10px;">
+                        <i class="fa-solid fa-notes-medical" style="font-size: 2rem; color: var(--primary-color);"></i>
+                        <h3 style="margin: 10px 0;">التخصصات</h3>
+                        <h2 id="statSpecialties" style="color: var(--secondary-color);">0</h2>
+                    </div>
+                </div>
+            </section>
+
+            <!-- قسم المرضى -->
+            <section id="patientsSection" class="admin-section" style="display: none;">
+                <div class="dashboard-header" style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+                    <h2>إدارة المرضى</h2>
+                </div>
+                <div class="table-responsive" style="overflow-x: auto; margin-top: 30px;">
+                    <table class="admin-table" id="patientsTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>الاسم</th>
+                                <th>البريد الإلكتروني</th>
+                                <th>رقم الهاتف</th>
+                                <th>تاريخ التسجيل</th>
+                            </tr>
+                        </thead>
+                        <tbody id="patientsTableBody">
+                            <!-- سيتم حقن المرضى بواسطة JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- قسم الحجوزات -->
+            <section id="bookingsSection" class="admin-section" style="display: none;">
+                <div class="dashboard-header" style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+                    <h2>إدارة الحجوزات</h2>
+                </div>
+                <div class="table-responsive" style="overflow-x: auto; margin-top: 30px;">
+                    <table class="admin-table" id="bookingsTable">
+                        <thead>
+                            <tr>
+                                <th>رقم الطلب</th>
+                                <th>اسم المريض</th>
+                                <th>رقم الهاتف</th>
+                                <th>الطبيب</th>
+                                <th>نوع الكشف</th>
+                                <th>الموعد</th>
+                                <th>إيصال الدفع</th>
+                                <th>الحالة</th>
+                                <th>الإجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookingsTableBody">
+                            <!-- سيتم حقن الحجوزات بواسطة JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- قسم التخصصات -->
+            <section id="specialtiesSection" class="admin-section" style="display: none;">
+                <div class="dashboard-header" style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center;">
+                    <h2>إدارة التخصصات</h2>
+                    <button class="btn btn-primary" onclick="openSpecialtyModal()"><i class="fa-solid fa-plus"></i> إضافة تخصص</button>
+                </div>
+                <div class="table-responsive" style="overflow-x: auto; margin-top: 30px;">
+                    <table class="admin-table" id="specialtiesTable">
+                        <thead>
+                            <tr>
+                                <th>الصورة</th>
+                                <th>اسم التخصص</th>
+                                <th>الوصف</th>
+                                <th>الإجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody id="specialtiesTableBody">
+                            <!-- سيتم حقن التخصصات بواسطة JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- قسم الأطباء -->
+            <section id="doctorsSection" class="admin-section" style="display: none;">
+                <div class="dashboard-header" style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center;">
+                    <h2>إدارة الأطباء</h2>
+                    <button class="btn btn-primary" onclick="openDoctorModal()"><i class="fa-solid fa-plus"></i> إضافة طبيب</button>
+                </div>
+                <div class="table-responsive" style="overflow-x: auto; margin-top: 30px;">
+                    <table class="admin-table" id="doctorsTable">
+                        <thead>
+                            <tr>
+                                <th>الصورة</th>
+                                <th>الاسم</th>
+                                <th>التخصص</th>
+                                <th>الخبرة</th>
+                                <th>سعر (عادي/مستعجل)</th>
+                                <th>الإجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody id="doctorsTableBody">
+                            <!-- سيتم حقن الأطباء بواسطة JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Modal إضافة/تعديل تخصص -->
+    <div id="specialtyModal" class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-items:center;">
+        <div class="glass-panel" style="background: white; width: 90%; max-width: 500px; padding: 30px; border-radius: 15px; position: relative; max-height: 90vh; overflow-y: auto;">
+            <span onclick="closeSpecialtyModal()" style="position:absolute; top:15px; left:20px; font-size:25px; cursor:pointer; color: var(--danger-color);">&times;</span>
+            <h3 id="specialtyModalTitle" style="color: var(--primary-color); margin-bottom: 20px;">إضافة تخصص جديد</h3>
+            
+            <form id="specialtyForm">
+                <input type="hidden" id="specId">
+                <div class="form-group">
+                    <label>اسم التخصص</label>
+                    <input type="text" id="specName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>وصف التخصص</label>
+                    <textarea id="specDesc" class="form-control" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>صورة التخصص (من الجهاز)</label>
+                    <input type="file" id="specImageFile" accept="image/*" class="form-control">
+                    <img id="specImagePreview" style="max-width: 100px; margin-top: 10px; display: none; border-radius: 10px;">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block" style="margin-top: 15px;">حفظ التخصص</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal إضافة/تعديل طبيب -->
+    <div id="doctorModal" class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-items:center;">
+        <div class="glass-panel" style="background: white; width: 90%; max-width: 600px; padding: 30px; border-radius: 15px; position: relative; max-height: 90vh; overflow-y: auto;">
+            <span onclick="closeDoctorModal()" style="position:absolute; top:15px; left:20px; font-size:25px; cursor:pointer; color: var(--danger-color);">&times;</span>
+            <h3 id="doctorModalTitle" style="color: var(--primary-color); margin-bottom: 20px;">إضافة طبيب جديد</h3>
+            
+            <form id="doctorForm">
+                <input type="hidden" id="docId">
+                <div class="form-group">
+                    <label>اسم الطبيب</label>
+                    <input type="text" id="docName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>التخصص</label>
+                    <select id="docSpecialty" class="form-control" required>
+                        <!-- سيتم تعبئة التخصصات عبر JS -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>المسمى الوظيفي</label>
+                    <input type="text" id="docTitle" class="form-control" placeholder="مثال: استشاري أمراض القلب" required>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label>سعر الكشف العادي</label>
+                        <input type="number" id="docNormalPrice" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>سعر الكشف المستعجل</label>
+                        <input type="number" id="docUrgentPrice" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>سنوات الخبرة</label>
+                    <input type="number" id="docExperience" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>مدة الكشف (بالدقائق)</label>
+                    <select id="docSlotDuration" class="form-control" required>
+                        <option value="15">15 دقيقة</option>
+                        <option value="30" selected>30 دقيقة</option>
+                        <option value="45">45 دقيقة</option>
+                        <option value="60">60 دقيقة</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>السيرة الذاتية (نبذة مختصرة)</label>
+                    <textarea id="docBio" class="form-control" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>صورة الطبيب (من الجهاز)</label>
+                    <input type="file" id="docImageFile" accept="image/*" class="form-control">
+                    <img id="docImagePreview" style="max-width: 100px; margin-top: 10px; display: none; border-radius: 10px;">
+                </div>
+
+                <div class="form-group">
+                    <h4 style="margin-top: 20px; margin-bottom: 15px; color: var(--primary-color); border-bottom: 2px solid var(--primary-color); padding-bottom: 5px;">جدول عمل الدكتور الأسبوعي</h4>
+                    <div class="schedule-grid">
+                        <!-- السبت -->
+                        <div class="schedule-row">
+                            <label class="schedule-day-label">
+                                <input type="checkbox" class="day-checkbox" data-day="Saturday">
+                                السبت
+                            </label>
+                            <div class="schedule-times">
+                                <input type="time" class="time-input start-time" data-day="Saturday" disabled>
+                                <span>إلى</span>
+                                <input type="time" class="time-input end-time" data-day="Saturday" disabled>
+                            </div>
+                        </div>
+                        <!-- الأحد -->
+                        <div class="schedule-row">
+                            <label class="schedule-day-label">
+                                <input type="checkbox" class="day-checkbox" data-day="Sunday">
+                                الأحد
+                            </label>
+                            <div class="schedule-times">
+                                <input type="time" class="time-input start-time" data-day="Sunday" disabled>
+                                <span>إلى</span>
+                                <input type="time" class="time-input end-time" data-day="Sunday" disabled>
+                            </div>
+                        </div>
+                        <!-- الاثنين -->
+                        <div class="schedule-row">
+                            <label class="schedule-day-label">
+                                <input type="checkbox" class="day-checkbox" data-day="Monday">
+                                الاثنين
+                            </label>
+                            <div class="schedule-times">
+                                <input type="time" class="time-input start-time" data-day="Monday" disabled>
+                                <span>إلى</span>
+                                <input type="time" class="time-input end-time" data-day="Monday" disabled>
+                            </div>
+                        </div>
+                        <!-- الثلاثاء -->
+                        <div class="schedule-row">
+                            <label class="schedule-day-label">
+                                <input type="checkbox" class="day-checkbox" data-day="Tuesday">
+                                الثلاثاء
+                            </label>
+                            <div class="schedule-times">
+                                <input type="time" class="time-input start-time" data-day="Tuesday" disabled>
+                                <span>إلى</span>
+                                <input type="time" class="time-input end-time" data-day="Tuesday" disabled>
+                            </div>
+                        </div>
+                        <!-- الأربعاء -->
+                        <div class="schedule-row">
+                            <label class="schedule-day-label">
+                                <input type="checkbox" class="day-checkbox" data-day="Wednesday">
+                                الأربعاء
+                            </label>
+                            <div class="schedule-times">
+                                <input type="time" class="time-input start-time" data-day="Wednesday" disabled>
+                                <span>إلى</span>
+                                <input type="time" class="time-input end-time" data-day="Wednesday" disabled>
+                            </div>
+                        </div>
+                        <!-- الخميس -->
+                        <div class="schedule-row">
+                            <label class="schedule-day-label">
+                                <input type="checkbox" class="day-checkbox" data-day="Thursday">
+                                الخميس
+                            </label>
+                            <div class="schedule-times">
+                                <input type="time" class="time-input start-time" data-day="Thursday" disabled>
+                                <span>إلى</span>
+                                <input type="time" class="time-input end-time" data-day="Thursday" disabled>
+                            </div>
+                        </div>
+                        <!-- الجمعة -->
+                        <div class="schedule-row">
+                            <label class="schedule-day-label">
+                                <input type="checkbox" class="day-checkbox" data-day="Friday">
+                                الجمعة
+                            </label>
+                            <div class="schedule-times">
+                                <input type="time" class="time-input start-time" data-day="Friday" disabled>
+                                <span>إلى</span>
+                                <input type="time" class="time-input end-time" data-day="Friday" disabled>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block" style="margin-top: 15px;">حفظ البيانات</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer glass-panel" style="text-align: center;">
+        <div class="container" style="text-align: center;">
+            <p>&copy; 2026 مستشفى الحياة. جميع الحقوق محفوظة.</p>
+            <div style="margin-top: 15px; font-weight: bold; color: var(--primary-color);">Made By Mohamed Ibrahim</div>
+        </div>
+    </footer>
+
+    <!-- Modal لعرض الإيصال بكامل الشاشة -->
+    <div id="receiptModal" class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; justify-content:center; align-items:center;">
+        <span onclick="closeModal()" style="position:absolute; top:20px; right:30px; color:white; font-size:40px; cursor:pointer;">&times;</span>
+        <img id="modalImg" style="max-width:90%; max-height:90%; border-radius: 10px;">
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+/* تنسيقات إضافية خاصة بلوحة تحكم الأدمن (معظم التنسيقات تمت في dashboard.css) */
+
+.admin-table td {
+    vertical-align: middle;
+}
+
+/* زر عرض الصورة */
+.view-receipt-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.view-receipt-btn:hover {
+    transform: scale(1.1);
+}
+
+/* شارات الحالة داخل الجدول */
+.badge {
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.badge.pending {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.badge.confirmed {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.badge.cancelled {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* أزرار الإجراءات */
+.actions-container {
+    display: flex;
+    gap: 5px;
+}
+
+.btn-approve, .btn-reject {
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    border: none;
+    color: white;
+    transition: 0.2s;
+}
+
+.btn-approve {
+    background-color: var(--success-color);
+}
+.btn-approve:hover {
+    background-color: #218838;
+}
+
+.btn-reject {
+    background-color: var(--danger-color);
+}
+.btn-reject:hover {
+    background-color: #c82333;
+}

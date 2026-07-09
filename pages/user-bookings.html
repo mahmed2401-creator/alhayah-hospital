@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حجوزاتي - مستشفى الحياة</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+
+    <div class="loader-wrapper">
+        <div class="loader"></div>
+    </div>
+
+    <!-- شريط التنقل -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="home.html" class="navbar-brand">
+                <i class="fa-solid fa-heart-pulse"></i>
+                مستشفى الحياة
+            </a>
+            <div class="menu-toggle">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+            <ul class="nav-links">
+                <li><a href="home.html">الرئيسية</a></li>
+                <li><a href="user-bookings.html" class="active">حجوزاتي</a></li>
+                <li><a href="contact.html">تواصل معنا</a></li>
+                <li><a href="#" id="navbar-username" class="user-name-badge"></a></li>
+                <li><a href="#" id="navbar-auth-link" class="btn btn-outline" style="padding: 5px 15px; border-radius: 15px;">تسجيل الدخول</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- محتوى الحجوزات -->
+    <div class="container dashboard-container">
+        <div class="dashboard-header">
+            <h2><i class="fa-solid fa-calendar-check" style="color: var(--primary-color);"></i> قائمة حجوزاتي</h2>
+            <a href="home.html#specialties" class="btn btn-primary">حجز موعد جديد</a>
+        </div>
+
+        <div class="booking-list" id="userBookingsList">
+            <!-- سيتم حقن الحجوزات بواسطة JS -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer glass-panel">
+        <div class="container">
+            <p>&copy; 2026 مستشفى الحياة. جميع الحقوق محفوظة.</p>
+            <div style="margin-top: 15px; font-weight: bold; color: var(--primary-color);">Made By Mohamed Ibrahim</div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const currentUser = JSON.parse(localStorage.getItem('alhayat_currentUser'));
+            const token = localStorage.getItem('alhayat_token');
+
+            if (!currentUser || !token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const userBookingsList = document.getElementById('userBookingsList');
+
+            try {
+                const response = await fetch('http://localhost:5000/api/bookings/my', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.message || 'خطأ في جلب الحجوزات');
+                }
+
+                const myBookings = data.data.reverse();
+
+                if (myBookings.length > 0) {
+                    userBookingsList.innerHTML = myBookings.map(booking => {
+                        let statusBadge = '';
+                        if (booking.status === 'pending') {
+                            statusBadge = '<span class="status-badge status-pending"><i class="fa-solid fa-clock"></i> قيد المراجعة</span>';
+                        } else if (booking.status === 'confirmed') {
+                            statusBadge = '<span class="status-badge status-confirmed"><i class="fa-solid fa-check-circle"></i> تم تأكيد الحجز</span>';
+                        } else if (booking.status === 'cancelled') {
+                            statusBadge = '<span class="status-badge status-cancelled"><i class="fa-solid fa-times-circle"></i> تم إلغاء الحجز</span>';
+                        }
+
+                        return `
+                            <div class="booking-item glass-panel">
+                                <div class="booking-info">
+                                    <h4>${booking.doctor?.name || 'طبيب غير معروف'}</h4>
+                                    <div class="booking-details">
+                                        <span><i class="fa-regular fa-calendar"></i> تاريخ الطلب: ${new Date(booking.createdAt).toLocaleDateString('ar-EG')}</span>
+                                        <span><i class="fa-regular fa-clock"></i> موعد الكشف: ${booking.time}</span>
+                                        <span><i class="fa-solid fa-stethoscope"></i> كشف ${booking.visitType}</span>
+                                    </div>
+                                </div>
+                                <div class="booking-status">
+                                    ${statusBadge}
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    userBookingsList.innerHTML = `
+                        <div style="text-align:center; padding: 50px; background: rgba(255,255,255,0.5); border-radius: 15px;">
+                            <i class="fa-regular fa-calendar-xmark" style="font-size: 3rem; color: #ccc; margin-bottom: 15px;"></i>
+                            <h3>لا توجد حجوزات حالية</h3>
+                            <p style="color: #666; margin-top: 10px;">لم تقم بإجراء أي حجوزات حتى الآن.</p>
+                        </div>
+                    `;
+                }
+            } catch (err) {
+                console.error(err);
+                userBookingsList.innerHTML = `<p style="text-align:center; color:red;">${err.message}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>

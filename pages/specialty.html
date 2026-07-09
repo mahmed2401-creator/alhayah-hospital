@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أطباء التخصص - مستشفى الحياة</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/doctor.css">
+</head>
+<body>
+
+    <div class="loader-wrapper">
+        <div class="loader"></div>
+    </div>
+
+    <!-- شريط التنقل -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="home.html" class="navbar-brand">
+                <i class="fa-solid fa-heart-pulse"></i>
+                مستشفى الحياة
+            </a>
+            <div class="menu-toggle">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+            <ul class="nav-links">
+                <li><a href="home.html">الرئيسية</a></li>
+                <li><a href="home.html#specialties" class="active">التخصصات</a></li>
+                <li><a href="contact.html">تواصل معنا</a></li>
+                <li><a href="#" id="navbar-username" class="user-name-badge"></a></li>
+                <li><a href="#" id="navbar-auth-link" class="btn btn-outline" style="padding: 5px 15px; border-radius: 15px;">تسجيل الدخول</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- الأطباء -->
+    <section class="doctors-section" style="padding: 50px 0;">
+        <div class="container">
+            <div class="section-title">
+                <h2 id="specialtyNameTitle">أطباء التخصص</h2>
+                <div class="underline"></div>
+            </div>
+            
+            <div class="doctors-grid" id="doctorsContainer">
+                <!-- سيتم حقن الأطباء هنا -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer glass-panel">
+        <div class="container">
+            <p>&copy; 2026 مستشفى الحياة. جميع الحقوق محفوظة.</p>
+            <div style="margin-top: 15px; font-weight: bold; color: var(--primary-color);">Made By Mohamed Ibrahim</div>
+        </div>
+    </footer>
+
+    <script src="../js/doctors.js"></script>
+    <script src="../js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const specialtyId = urlParams.get('id');
+            const container = document.getElementById('doctorsContainer');
+            
+            try {
+                // جلب اسم التخصص (يمكننا جلبه من قائمة التخصصات)
+                const specRes = await fetch('http://localhost:5000/api/specialties');
+                const specData = await specRes.json();
+                const specialty = specData.data.find(s => s._id === specialtyId);
+                
+                if (specialty) {
+                    document.getElementById('specialtyNameTitle').textContent = `أطباء قسم ${specialty.name}`;
+                }
+
+                // جلب الأطباء
+                const docRes = await fetch('http://localhost:5000/api/doctors');
+                const docData = await docRes.json();
+                
+                // فلترة أطباء التخصص المحدد
+                const filteredDoctors = docData.data.filter(d => d.specialty && d.specialty._id === specialtyId);
+                
+                if (filteredDoctors.length > 0) {
+                    container.innerHTML = filteredDoctors.map(doc => {
+                        const imgSrc = doc.image === 'default-doctor.png' ? '../images/doc1.jpg' : `http://localhost:5000/uploads/${doc.image}`;
+                        return `
+                        <div class="doctor-card glass-panel">
+                            <img src="${imgSrc}" alt="${doc.name}" class="doctor-img">
+                            <h3>${doc.name}</h3>
+                            <p class="doctor-title">${doc.title}</p>
+                            <p class="doctor-bio">${doc.bio}</p>
+                            
+                            <div class="doctor-stats">
+                                <div class="stat-item">
+                                    <span class="stat-value">${doc.experience} سنوات</span>
+                                    <span class="stat-label">خبرة</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value">${doc.normalPrice} ج.م</span>
+                                    <span class="stat-label">كشف عادي</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value">${doc.urgentPrice} ج.م</span>
+                                    <span class="stat-label">مستعجل</span>
+                                </div>
+                            </div>
+
+                            <a href="booking.html?doctorId=${doc._id}" class="btn btn-primary btn-block">حجز الآن</a>
+                        </div>
+                        `;
+                    }).join('');
+                } else {
+                    container.innerHTML = '<p style="text-align:center; grid-column: 1/-1;">لا يوجد أطباء متاحين في هذا التخصص حالياً.</p>';
+                }
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color:red;">فشل في جلب الأطباء. يرجى التأكد من عمل الخادم.</p>';
+            }
+        });
+    </script>
+</body>
+</html>

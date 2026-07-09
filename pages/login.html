@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول - مستشفى الحياة</title>
+    <!-- استيراد Font Awesome للأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SweetAlert2 للرسائل -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- التنسيقات -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/login.css">
+</head>
+<body class="bg-medical">
+
+    <!-- شاشة التحميل -->
+    <div class="loader-wrapper">
+        <div class="loader"></div>
+    </div>
+
+    <div class="auth-container">
+        <div class="glass-panel auth-box">
+            <div class="auth-header">
+                <i class="fa-solid fa-heart-pulse logo-icon"></i>
+                <h2>مستشفى الحياة</h2>
+                <p>سجل دخولك لحجز موعدك الطبي</p>
+            </div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">البريد الإلكتروني</label>
+                    <input type="email" id="email" class="form-control" required placeholder="example@mail.com">
+                    <i class="fa-solid fa-envelope form-icon"></i>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">كلمة المرور</label>
+                    <input type="password" id="password" class="form-control" required placeholder="******">
+                    <i class="fa-solid fa-lock form-icon"></i>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-block">تسجيل الدخول</button>
+            </form>
+            
+            <div class="auth-footer">
+                <p>ليس لديك حساب؟ <a href="register.html">إنشاء حساب</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer glass-panel">
+        <div class="container">
+            <p>&copy; 2026 مستشفى الحياة. جميع الحقوق محفوظة.</p>
+            <div style="margin-top: 15px; font-weight: bold; color: var(--primary-color);">Made By Mohamed Ibrahim</div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/auth.js"></script>
+</body>
+</html>
