@@ -1,14 +1,17 @@
 const mongoose = require('mongoose');
 
-// منع إعادة الاتصال لو موجود بالفعل (مهم لـ Vercel Serverless)
-let isConnected = false;
-
 const connectDB = async () => {
-    if (isConnected) return;
+    // 0 = disconnected, 1 = connected, 2 = connecting, 3 = disconnecting
+    if (mongoose.connection.readyState === 1) {
+        return mongoose.connection;
+    }
 
     try {
-        const conn = await mongoose.connect(process.env.MONGODB_URI);
-        isConnected = true;
+        const conn = await mongoose.connect(process.env.MONGODB_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            serverSelectionTimeoutMS: 5000 // تقليل وقت الانتظار لتجنب تعليق الطلبات
+        });
         console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
         return conn;
     } catch (error) {

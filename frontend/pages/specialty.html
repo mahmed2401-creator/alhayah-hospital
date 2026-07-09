@@ -115,7 +115,7 @@
                 }
             } catch (err) {
                 console.error(err);
-                container.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color:red;">فشل في جلب الأطباء. يرجى التأكد من عمل الخادم.</p>';
+                container.innerHTML = `<p style="text-align:center; grid-column: 1/-1; color:red;">خطأ: ${err.message}</p>`;
             }
         });
     </script>

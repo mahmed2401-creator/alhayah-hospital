@@ -458,7 +458,8 @@ window.loadDoctors = async function() {
             `;
         }).join('');
     } catch (err) {
-        Swal.fire('خطأ', 'فشل في جلب الأطباء', 'error');
+        console.error(err);
+        Swal.fire('خطأ', `فشل في جلب الأطباء: ${err.message}`, 'error');
     }
 }
 
