@@ -33,8 +33,8 @@ app.use('/api/doctors', require('./routes/doctorRoutes'));
 app.use('/api/bookings', require('./routes/bookingRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
 
-// أي Route مش API يروح للـ Frontend
-app.get('*', (req, res) => {
+// أي Route مش API يروح للـ Frontend (Express 5 compatible)
+app.use((req, res) => {
     res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
