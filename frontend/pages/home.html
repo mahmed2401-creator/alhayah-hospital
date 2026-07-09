@@ -74,13 +74,13 @@
         document.addEventListener('DOMContentLoaded', async () => {
             const container = document.getElementById('specialtiesContainer');
             try {
-                const response = await fetch('http://localhost:5000/api/specialties');
+                const response = await fetch('/api/specialties');
                 const data = await response.json();
                 const specialties = data.data;
 
                 if (specialties && specialties.length > 0) {
                     container.innerHTML = specialties.map(spec => {
-                        const imgSrc = spec.image === 'default-specialty.png' ? '../images/default.jpg' : `http://localhost:5000/uploads/${spec.image}`;
+                        const imgSrc = spec.image === 'default-specialty.png' ? '../images/default.jpg' : `/uploads/${spec.image}`;
                         return `
                         <div class="specialty-card glass-panel">
                             <div class="specialty-img">

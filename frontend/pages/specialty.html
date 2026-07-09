@@ -66,7 +66,7 @@
             
             try {
                 // جلب اسم التخصص (يمكننا جلبه من قائمة التخصصات)
-                const specRes = await fetch('http://localhost:5000/api/specialties');
+                const specRes = await fetch('/api/specialties');
                 const specData = await specRes.json();
                 const specialty = specData.data.find(s => s._id === specialtyId);
                 
@@ -75,7 +75,7 @@
                 }
 
                 // جلب الأطباء
-                const docRes = await fetch('http://localhost:5000/api/doctors');
+                const docRes = await fetch('/api/doctors');
                 const docData = await docRes.json();
                 
                 // فلترة أطباء التخصص المحدد
@@ -83,7 +83,7 @@
                 
                 if (filteredDoctors.length > 0) {
                     container.innerHTML = filteredDoctors.map(doc => {
-                        const imgSrc = doc.image === 'default-doctor.png' ? '../images/doc1.jpg' : `http://localhost:5000/uploads/${doc.image}`;
+                        const imgSrc = doc.image === 'default-doctor.png' ? '../images/doc1.jpg' : `/uploads/${doc.image}`;
                         return `
                         <div class="doctor-card glass-panel">
                             <img src="${imgSrc}" alt="${doc.name}" class="doctor-img">

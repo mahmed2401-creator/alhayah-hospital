@@ -69,7 +69,7 @@
             const userBookingsList = document.getElementById('userBookingsList');
 
             try {
-                const response = await fetch('http://localhost:5000/api/bookings/my', {
+                const response = await fetch('/api/bookings/my', {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
