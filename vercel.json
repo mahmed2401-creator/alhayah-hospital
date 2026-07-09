@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "/backend/server.js" },
+    { "source": "/uploads/:path*", "destination": "/backend/server.js" }
+  ],
+  "builds": [
+    {
+      "src": "backend/server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "outputDirectory": "frontend"
+}

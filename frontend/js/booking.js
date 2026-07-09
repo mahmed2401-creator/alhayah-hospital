@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let bookedSlots = [];
 
     try {
-        const docRes = await fetch(`http://localhost:5000/api/doctors/${doctorId}`);
+        const docRes = await fetch(`/api/doctors/${doctorId}`);
         const docData = await docRes.json();
         
         if (!docRes.ok || !docData.success) {
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         doctor = docData.data;
 
         // جلب الفترات المحجوزة مسبقاً
-        const slotsRes = await fetch(`http://localhost:5000/api/doctors/${doctorId}/slots`);
+        const slotsRes = await fetch(`/api/doctors/${doctorId}/slots`);
         const slotsData = await slotsRes.json();
         if (slotsRes.ok && slotsData.success) {
             bookedSlots = slotsData.data;
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // =============================
     const doctorInfoCard = document.getElementById('doctorInfoCard');
     if (doctorInfoCard) {
-        const imgSrc = doctor.image === 'default-doctor.png' ? '../images/doc1.jpg' : `http://localhost:5000/uploads/${doctor.image}`;
+        const imgSrc = doctor.image === 'default-doctor.png' ? '../images/doc1.jpg' : `/uploads/${doctor.image}`;
         doctorInfoCard.innerHTML = `
             <img src="${imgSrc}" alt="${doctor.name}">
             <h3>${doctor.name}</h3>
@@ -222,7 +222,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             formData.append('receiptImage', receiptFile);
 
             try {
-                const response = await fetch('http://localhost:5000/api/bookings', {
+                const response = await fetch('/api/bookings', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}` // FormData لا نضع لها Content-Type

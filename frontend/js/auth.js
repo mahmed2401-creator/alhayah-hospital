@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     
     // عنوان الـ API الأساسي للـ Backend
-    const API_URL = 'http://localhost:5000/api/auth';
+    const API_URL = '/api/auth';
 
     // معالجة نموذج تسجيل الدخول
     const loginForm = document.getElementById('loginForm');

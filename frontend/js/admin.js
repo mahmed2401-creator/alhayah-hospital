@@ -1,5 +1,5 @@
-const API_URL = 'http://localhost:5000/api';
-const BASE_URL = 'http://localhost:5000';
+const API_URL = '/api';
+const BASE_URL = '';
 
 document.addEventListener('DOMContentLoaded', () => {
     // التحقق من صلاحيات الأدمن
