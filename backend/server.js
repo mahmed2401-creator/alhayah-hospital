@@ -34,17 +34,16 @@ app.use((req, res) => {
     res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
-// الاتصال بقاعدة البيانات ثم تشغيل السيرفر
-const PORT = process.env.PORT || 5000;
-
-connectDB().then(() => {
-    if (!process.env.VERCEL) {
-        app.listen(PORT, () => {
-            console.log(`🚀 Server running on http://localhost:${PORT}`);
-        });
-    }
-}).catch(err => {
-    console.error('❌ فشل الاتصال بقاعدة البيانات:', err.message);
+// الاتصال بقاعدة البيانات أولاً
+connectDB().catch(err => {
+    console.error('DB connection failed:', err.message);
 });
+
+const PORT = process.env.PORT || 5000;
+if (!process.env.VERCEL) {
+    app.listen(PORT, () => {
+        console.log(`🚀 Server running on http://localhost:${PORT}`);
+    });
+}
 
 module.exports = app;
